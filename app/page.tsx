@@ -7,6 +7,8 @@ import {
   Linkedin,
   Mail,
   ExternalLink,
+  Globe,
+  Trophy,
   Download,
   ChevronDown,
   Code2,
@@ -22,21 +24,62 @@ import {
 // ---------- CONFIG: Edit these to personalize ----------
 const PROFILE = {
   name: "Shreyas Gupta",
-  title: "AI/ML • Data Science • Full-Stack Developer",
+  title: "AI/ML Engineer • Full-Stack Developer • Research Intern",
   tagline:
-    "Computer Science undergraduate specializing in AI/ML and data-driven systems. I build practical, production-ready projects that solve real-world problems.",
-  location: "Lucknow, India",
+    "Integrated M.Tech in Artificial Intelligence with hands-on experience in AI systems, cybersecurity research, and full-stack product development.",
+  location: "Chennai, India",
   email: "contactshreyasgupta@gmail.com",
   phone: "+91 9151606122",
   linkedin: "https://www.linkedin.com/in/contact-shreyas/",
   github: "https://github.com/contact-shreyas",
   leetcode: "https://leetcode.com/u/Gupta_Shreyas/",
+  website: "https://shreyas-gupta-portfolio.vercel.app",
   resumePath: "/resume_shreyas_gupta.pdf",
   photo: "/profile.svg", // place your actual photo as profile.jpg in /public
 };
 
-// Projects — add GitHub/demo links when available
+// Projects
 const PROJECTS = [
+  {
+    title: "BharatGreen AI",
+    period: "Feb 2026 – Mar 2026",
+    stack: ["Python", "FastAPI", "Next.js", "TypeScript", "NVIDIA NIM"],
+    summary:
+      "Built an AI sustainability platform tracking energy, carbon, and water across regions. Integrated NVIDIA Nemotron for optimization insights with a reliable fallback mode, and developed a real-time dashboard with what-if analysis and carbon-aware scheduling tools.",
+    github: "https://github.com/contact-shreyas/BharatGreen-AI",
+    demo: "https://frontend-nine-bay-81.vercel.app/",
+    highlight: true,
+  },
+  {
+    title: "AI Policy Enforcement Platform",
+    period: "Jan 2026 – Mar 2026",
+    stack: ["Python", "FastAPI", "Next.js", "PostgreSQL", "SQLAlchemy", "LangChain", "OpenAI GPT-4"],
+    summary:
+      "Implemented JWT authentication with role-based access control for faculty, students, and admins. Built a PostgreSQL schema with SQLAlchemy for policies, decisions, and metadata logs, and integrated GPT-4 + LangChain for a RAG copilot with citation verification.",
+    github: "https://github.com/contact-shreyas/Information-Technology-in-Education",
+    demo: "",
+    highlight: true,
+  },
+  {
+    title: "Infrastructure Configuration Hardening Engine",
+    period: "Nov 2025 – Jan 2026",
+    stack: ["Node.js", "TypeScript", "Docker", "Kubernetes", "Nginx", "CVSS"],
+    summary:
+      "Built a TypeScript system for scanning folders, identifying risks, and applying security fixes. Created analyzers for Nginx, Docker, and Kubernetes configurations and developed CVSS-based risk scoring for attack, access, and time factors.",
+    github: "https://github.com/contact-shreyas/HardenerAI",
+    demo: "",
+    highlight: true,
+  },
+  {
+    title: "GenAI Governance Platform",
+    period: "Aug 2025 – Oct 2025",
+    stack: ["Python", "FastAPI", "Next.js", "PostgreSQL", "Docker"],
+    summary:
+      "Built a policy decision engine with rule evaluation, conflict detection, and multiple resolution strategies. Implemented privacy-safe audit logging with SHA256 hashing and developed FastAPI endpoints with validation, rate limiting, and CORS.",
+    github: "https://github.com/contact-shreyas/GenAI-GOVERNANCE-SYSTEM",
+    demo: "",
+    highlight: false,
+  },
   {
     title: "Light Pollution Explorer 2.0 (Agentic Light Sentinel)",
     period: "Nov 2024 – Present",
@@ -112,41 +155,56 @@ const SKILLS = {
   ],
   "AI/ML & Data Science": [
     "TensorFlow",
-    "PyTorch",
-    "Scikit-learn",
+    "OpenAI API",
+    "Google Gemini API",
     "NLP",
-    "Deep Learning",
-    "Computer Vision",
+    "NLTK",
+    "Streamlit",
+    "Seaborn",
     "Pandas",
     "NumPy",
-    "Transformers",
+    "Matplotlib",
   ],
   "Frameworks & Libraries": [
     "Next.js",
     "React",
     "Node.js",
-    "Prisma",
-    "Leaflet",
-    "Pygame",
-    "Swing",
+    "FastAPI",
+    "Flask",
+    "LangChain",
+    "SQLAlchemy",
   ],
   "Tools & Technologies": [
     "Git",
+    "GitHub",
     "VS Code",
-    "Power BI",
-    "Tableau",
-    "SQL Server",
-    "PostgreSQL",
-    "MySQL",
+    "Linux",
+    "AWS",
     "Azure",
     "Docker",
-    "Jupyter",
-    "Raspberry Pi",
+    "Jupyter Notebook",
+    "Anaconda",
+    "PyCharm",
+    "Power BI",
+    "Tableau",
+    "PostgreSQL",
+    "SQL",
   ],
 };
 
 // Experience
 const EXPERIENCE = [
+  {
+    role: "Cybersecurity Research Intern",
+    company: "Indian Institute of Technology, Guwahati",
+    period: "Dec 2025 – Mar 2026",
+    location: "Guwahati, India",
+    points: [
+      "Designed modular architecture with CLI, parser, validator, loader, query, and UI modules",
+      "Implemented custom LadyBugDB embedded graph database using CSV storage for functions and edges",
+      "Explored methods to visualize GitHub collaboration in a classroom setting",
+    ],
+  },
   {
     role: "Business Strategy Intern",
     company: "To-Let Globe",
@@ -158,37 +216,23 @@ const EXPERIENCE = [
       "Supported leadership with data-driven strategic recommendations for platform optimization",
     ],
   },
+];
+
+const ACHIEVEMENTS = [
   {
-    role: "Web Developer Intern",
-    company: "Oasis Infobyte",
-    period: "Apr 2024 – May 2024",
-    location: "Remote",
-    points: [
-      "Designed and developed responsive web applications using HTML, CSS, JavaScript",
-      "Created Temperature Converter and Landing Page with optimized algorithms",
-      "Collaborated using GitHub and followed agile development workflows",
-    ],
+    title: "Winner - Agentic AI Hackathon 2025",
+    issuer: "ALPS - Agentic Light Pollution Sentinel",
+    date: "Sep 2025",
+    location: "Chennai, India",
   },
 ];
 
-// Top Certifications
+// Certifications
 const CERTIFICATIONS = [
   {
-    title: "Natural Language Processing",
-    issuer: "NPTEL",
-    date: "Jun 2025",
-    icon: Award,
-  },
-  {
-    title: "NLP with Azure AI",
-    issuer: "Microsoft",
-    date: "Feb 2025",
-    icon: Award,
-  },
-  {
-    title: "Azure AI Document Intelligence",
-    issuer: "Microsoft",
-    date: "2025",
+    title: "TATA GenAI Powered Data Analytics Job Simulation",
+    issuer: "Forage",
+    date: "Oct 2025",
     icon: Award,
   },
   {
@@ -198,15 +242,21 @@ const CERTIFICATIONS = [
     icon: Award,
   },
   {
-    title: "Google AI-ML Certification",
-    issuer: "Eduskills Foundation",
-    date: "Jan-Mar 2025",
+    title: "Competitive Programming (Certificate of Excellence)",
+    issuer: "Coding Ninjas",
+    date: "Jun 2024",
+    icon: Award,
+  },
+  {
+    title: "Natural Language Processing",
+    issuer: "NPTEL",
+    date: "Apr 2025",
     icon: Award,
   },
   {
     title: "Programming in Java",
     issuer: "NPTEL",
-    date: "Dec 2023",
+    date: "Oct 2023",
     icon: Award,
   },
 ];
@@ -216,8 +266,8 @@ const EDUCATION = {
   institution: "SRM Institute of Science and Technology (SRMIST)",
   location: "Chennai, India",
   degree: "M.Tech (Integrated) – Artificial Intelligence",
-  period: "2022 – 2027",
-  gpa: "8.21 CGPA",
+  period: "Aug 2022 – May 2027",
+  gpa: "",
 };
 
 // Animation variants
@@ -255,7 +305,7 @@ export default function Home() {
               {PROFILE.name}
             </motion.h1>
             <div className="hidden md:flex items-center gap-8">
-              {["about", "projects", "skills", "experience", "certifications", "contact"].map(
+              {["about", "projects", "skills", "experience", "achievements", "certifications", "contact"].map(
                 (section) => (
                   <button
                     key={section}
@@ -360,6 +410,15 @@ export default function Home() {
                   <Linkedin size={18} />
                   LinkedIn
                 </a>
+                <a
+                  href={PROFILE.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-6 py-3 border-2 border-gray-300 dark:border-gray-700 hover:border-blue-600 dark:hover:border-blue-500 rounded-lg transition-colors font-medium text-gray-700 dark:text-gray-300"
+                >
+                  <Globe size={18} />
+                  Website
+                </a>
               </motion.div>
             </div>
           </motion.div>
@@ -377,6 +436,52 @@ export default function Home() {
             >
               <ChevronDown size={32} />
             </button>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Achievements Section */}
+      <section id="achievements" className="py-20 px-6 bg-white dark:bg-gray-900">
+        <div className="container mx-auto max-w-4xl">
+          <motion.div
+            initial="initial"
+            whileInView="animate"
+            viewport={{ once: true }}
+            variants={staggerContainer}
+          >
+            <motion.h3
+              variants={fadeInUp}
+              className="text-4xl font-bold mb-4 text-center"
+            >
+              Awards & Achievements
+            </motion.h3>
+            <motion.p
+              variants={fadeInUp}
+              className="text-gray-600 dark:text-gray-400 text-center mb-12 max-w-2xl mx-auto"
+            >
+              Competitive milestones and recognition from hackathons and innovation events.
+            </motion.p>
+
+            <div className="space-y-6">
+              {ACHIEVEMENTS.map((item, index) => (
+                <motion.div
+                  key={index}
+                  variants={fadeInUp}
+                  className="p-6 rounded-xl border-2 border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50 hover:border-blue-500 dark:hover:border-blue-500 transition-all"
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="p-3 rounded-lg bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400">
+                      <Trophy size={24} />
+                    </div>
+                    <div>
+                      <h4 className="text-xl font-bold">{item.title}</h4>
+                      <p className="text-blue-600 dark:text-blue-400 font-medium">{item.issuer}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{item.date} • {item.location}</p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </motion.div>
         </div>
       </section>
@@ -623,9 +728,11 @@ export default function Home() {
                     <MapPin size={16} />
                     {EDUCATION.location}
                   </span>
-                  <span className="font-semibold text-gray-800 dark:text-gray-200">
-                    CGPA: {EDUCATION.gpa}
-                  </span>
+                  {EDUCATION.gpa && (
+                    <span className="font-semibold text-gray-800 dark:text-gray-200">
+                      CGPA: {EDUCATION.gpa}
+                    </span>
+                  )}
                 </div>
               </div>
             </motion.div>
@@ -752,6 +859,24 @@ export default function Home() {
                 <span className="font-medium">LinkedIn</span>
               </a>
               <a
+                href={PROFILE.leetcode}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              >
+                <Code2 size={24} />
+                <span className="font-medium">LeetCode</span>
+              </a>
+              <a
+                href={PROFILE.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              >
+                <Globe size={24} />
+                <span className="font-medium">Website</span>
+              </a>
+              <a
                 href={`tel:${PROFILE.phone}`}
                 className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
               >
@@ -766,7 +891,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="py-8 px-6 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
         <div className="container mx-auto max-w-6xl text-center text-gray-600 dark:text-gray-400">
-          <p>© 2025 {PROFILE.name}. Built with Next.js & Tailwind CSS.</p>
+          <p>© {new Date().getFullYear()} {PROFILE.name}. Built with Next.js & Tailwind CSS.</p>
           <p className="text-sm mt-2">
             Designed to showcase AI/ML projects and full-stack development skills.
           </p>
