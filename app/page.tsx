@@ -1,25 +1,7 @@
 "use client";
-import React from "react";
+import React, { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import {
-  Github,
-  Linkedin,
-  Mail,
-  ExternalLink,
-  Globe,
-  Trophy,
-  Download,
-  ChevronDown,
-  Code2,
-  Cpu,
-  Database,
-  Wrench,
-  MapPin,
-  Award,
-  Briefcase,
-  Calendar,
-} from "lucide-react";
 
 // ---------- CONFIG: Edit these to personalize ----------
 const PROFILE = {
@@ -35,7 +17,7 @@ const PROFILE = {
   leetcode: "https://leetcode.com/u/Gupta_Shreyas/",
   website: "https://shreyas-gupta-portfolio.vercel.app",
   resumePath: "/resume_shreyas_gupta.pdf",
-  photo: "/profile.svg", // place your actual photo as profile.jpg in /public
+  photo: "/profile.jpg",
 };
 
 // Projects
@@ -49,6 +31,7 @@ const PROJECTS = [
     github: "https://github.com/contact-shreyas/BharatGreen-AI",
     demo: "https://frontend-nine-bay-81.vercel.app/",
     highlight: true,
+    cover: "/covers/bharatgreen.png",
   },
   {
     title: "AI Policy Enforcement Platform",
@@ -59,6 +42,7 @@ const PROJECTS = [
     github: "https://github.com/contact-shreyas/Information-Technology-in-Education",
     demo: "",
     highlight: true,
+    cover: "/covers/policy-enforcement.svg",
   },
   {
     title: "Infrastructure Configuration Hardening Engine",
@@ -69,6 +53,7 @@ const PROJECTS = [
     github: "https://github.com/contact-shreyas/HardenerAI",
     demo: "",
     highlight: true,
+    cover: "/covers/hardening-engine.svg",
   },
   {
     title: "GenAI Governance Platform",
@@ -79,6 +64,7 @@ const PROJECTS = [
     github: "https://github.com/contact-shreyas/GenAI-GOVERNANCE-SYSTEM",
     demo: "",
     highlight: false,
+    cover: "/covers/genai-governance.svg",
   },
   {
     title: "Light Pollution Explorer 2.0 (Agentic Light Sentinel)",
@@ -89,6 +75,7 @@ const PROJECTS = [
     github: "https://github.com/contact-shreyas/agentic-light-sentinel",
     demo: "",
     highlight: true,
+    cover: "/covers/light-pollution.svg",
   },
   {
     title: "AI-Powered Fraud Detection System",
@@ -99,6 +86,7 @@ const PROJECTS = [
     github: "",
     demo: "",
     highlight: true,
+    cover: "/covers/fraud-detection.svg",
   },
   {
     title: "Medical Visual Question Answering (VQA)",
@@ -109,6 +97,7 @@ const PROJECTS = [
     github: "",
     demo: "",
     highlight: false,
+    cover: "/covers/medical-vqa.svg",
   },
   {
     title: "AI Assistant Bot",
@@ -119,6 +108,7 @@ const PROJECTS = [
     github: "",
     demo: "",
     highlight: false,
+    cover: "/covers/assistant-bot.svg",
   },
   {
     title: "Electricity Billing System",
@@ -129,6 +119,7 @@ const PROJECTS = [
     github: "",
     demo: "",
     highlight: false,
+    cover: "/covers/electricity-billing.svg",
   },
   {
     title: "Secure Full-Stack Application",
@@ -139,6 +130,7 @@ const PROJECTS = [
     github: "https://github.com/contact-shreyas/nextjs-secure-app",
     demo: "",
     highlight: false,
+    cover: "/covers/secure-fullstack.svg",
   },
 ];
 
@@ -195,6 +187,20 @@ const SKILLS = {
 // Experience
 const EXPERIENCE = [
   {
+    role: "AI Engineer",
+    company: "Revenuxe",
+    period: "Jun 2026 – Jul 2026",
+    location: "Remote",
+    points: [
+      "Built and deployed RAG pipelines and agentic AI features for Intorza and Looplic using Python, FastAPI, and LangChain, enabling context-aware automation across core product workflows",
+      "Developed a Repair/Sell decision engine for Looplic with Cashify-style device evaluation logic and dynamic pricing, improving operator decision accuracy",
+      "Designed and shipped full-stack modules (quotation, invoice, real-time canvas) across Looplic and Intorza using Next.js and PostgreSQL, streamlining end-to-end transaction workflows",
+      "Led infrastructure migration of Intorza's backend from AWS Amplify/Supabase to AWS RDS, improving scalability and reducing operational overhead",
+      "Debugged and optimized the quotation module's preview editor and invoice generation flow, resolving critical production issues affecting client-facing outputs",
+      "Containerized services with Docker to standardize deployment across development and production environments",
+    ],
+  },
+  {
     role: "Cybersecurity Research Intern",
     company: "Indian Institute of Technology, Guwahati",
     period: "Dec 2025 – Mar 2026",
@@ -233,31 +239,26 @@ const CERTIFICATIONS = [
     title: "TATA GenAI Powered Data Analytics Job Simulation",
     issuer: "Forage",
     date: "Oct 2025",
-    icon: Award,
   },
   {
     title: "Technology Job Simulation",
     issuer: "Deloitte (Forage)",
     date: "Jun 2025",
-    icon: Award,
   },
   {
     title: "Competitive Programming (Certificate of Excellence)",
     issuer: "Coding Ninjas",
     date: "Jun 2024",
-    icon: Award,
   },
   {
     title: "Natural Language Processing",
     issuer: "NPTEL",
     date: "Apr 2025",
-    icon: Award,
   },
   {
     title: "Programming in Java",
     issuer: "NPTEL",
     date: "Oct 2023",
-    icon: Award,
   },
 ];
 
@@ -270,630 +271,516 @@ const EDUCATION = {
   gpa: "",
 };
 
-// Animation variants
-const fadeInUp = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.5 },
+// ---------- Motion helpers ----------
+const reveal = {
+  initial: { opacity: 0, y: 24 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: "-60px" },
+  transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const },
 };
 
-const staggerContainer = {
-  animate: {
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-};
+// Alternating typographic cover treatments for project tiles
+const COVER_STYLES = [
+  "bg-ink text-cream",
+  "bg-beige text-ink",
+  "bg-white text-ink",
+  "bg-sand text-ink",
+  "bg-stone text-ink",
+];
+
+function initials(title: string) {
+  return title
+    .split(/\s+/)
+    .filter((w) => /^[A-Za-z]/.test(w))
+    .slice(0, 2)
+    .map((w) => w[0].toUpperCase())
+    .join("");
+}
+
+const NAV_LINKS = [
+  { label: "projects", href: "#projects" },
+  { label: "experience", href: "#experience" },
+  { label: "about", href: "#about" },
+  { label: "contact", href: "#contact" },
+];
 
 export default function Home() {
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    element?.scrollIntoView({ behavior: "smooth" });
+  const [menuOpen, setMenuOpen] = useState(false);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const dragState = useRef({ down: false, moved: false, startX: 0, startLeft: 0 });
+
+  const scrollCarousel = (dir: 1 | -1) => {
+    const el = carouselRef.current;
+    if (!el) return;
+    el.scrollBy({ left: dir * Math.round(el.clientWidth * 0.8), behavior: "smooth" });
   };
 
+  // Mouse drag-to-scroll for the carousel (touch already scrolls natively)
+  const onDragStart = (e: React.PointerEvent) => {
+    if (e.pointerType !== "mouse") return;
+    const el = carouselRef.current;
+    if (!el) return;
+    dragState.current = { down: true, moved: false, startX: e.clientX, startLeft: el.scrollLeft };
+  };
+  const onDragMove = (e: React.PointerEvent) => {
+    const el = carouselRef.current;
+    if (!el || !dragState.current.down) return;
+    const dx = e.clientX - dragState.current.startX;
+    if (!dragState.current.moved && Math.abs(dx) > 5) {
+      dragState.current.moved = true;
+      el.setPointerCapture(e.pointerId);
+      el.dataset.dragging = "true";
+    }
+    if (dragState.current.moved) el.scrollLeft = dragState.current.startLeft - dx;
+  };
+  const onDragEnd = () => {
+    const el = carouselRef.current;
+    dragState.current.down = false;
+    if (el) delete el.dataset.dragging;
+  };
+  const onCarouselClickCapture = (e: React.MouseEvent) => {
+    if (dragState.current.moved) {
+      e.preventDefault();
+      e.stopPropagation();
+      dragState.current.moved = false;
+    }
+  };
+
+  const featured = [
+    {
+      label: "Project",
+      title: PROJECTS[0].title,
+      meta: PROJECTS[0].period,
+      href: "#projects",
+    },
+    {
+      label: "Experience",
+      title: `${EXPERIENCE[0].role} — ${EXPERIENCE[0].company}`,
+      meta: EXPERIENCE[0].period,
+      href: "#experience",
+    },
+    {
+      label: "Award",
+      title: ACHIEVEMENTS[0].title,
+      meta: `${ACHIEVEMENTS[0].date} • ${ACHIEVEMENTS[0].location}`,
+      href: "#about",
+    },
+  ];
+
   return (
-    <main className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
+    <main className="min-h-screen bg-cream text-ink">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <motion.h1
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
-            >
-              {PROFILE.name}
-            </motion.h1>
-            <div className="hidden md:flex items-center gap-8">
-              {["about", "projects", "skills", "experience", "achievements", "certifications", "contact"].map(
-                (section) => (
-                  <button
-                    key={section}
-                    onClick={() => scrollToSection(section)}
-                    className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors capitalize"
-                  >
-                    {section}
-                  </button>
-                )
-              )}
-            </div>
-            <a
-              href={PROFILE.resumePath}
-              download
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm font-medium"
-            >
-              <Download size={16} />
-              Resume
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-cream/95 border-b border-beige">
+        <div className="mx-auto max-w-7xl px-6 md:px-10 py-4 flex items-center justify-between">
+          <a href="#top" className="text-lg tracking-tight lowercase">
+            shreyas<span className="text-smoke">.</span>gupta
+          </a>
+          <div className="hidden md:flex items-center gap-8 text-sm lowercase">
+            {NAV_LINKS.map((link) => (
+              <a key={link.href} href={link.href} className="hover:underline underline-offset-4">
+                {link.label}
+              </a>
+            ))}
+            <a href={PROFILE.resumePath} download className="link-quiet">
+              resume
             </a>
           </div>
+          <button
+            className="md:hidden text-sm lowercase underline underline-offset-4"
+            onClick={() => setMenuOpen(true)}
+            aria-label="Open menu"
+          >
+            menu
+          </button>
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="pt-32 pb-20 px-6">
-        <div className="container mx-auto max-w-6xl">
-          <motion.div
-            initial="initial"
-            animate="animate"
-            variants={staggerContainer}
-            className="flex flex-col md:flex-row items-center gap-12"
+      {/* Mobile full-screen menu */}
+      {menuOpen && (
+        <div className="fixed inset-0 z-[60] bg-cream flex flex-col px-6 py-4">
+          <div className="flex items-center justify-between">
+            <span className="text-lg lowercase">
+              shreyas<span className="text-smoke">.</span>gupta
+            </span>
+            <button
+              className="text-sm lowercase underline underline-offset-4"
+              onClick={() => setMenuOpen(false)}
+              aria-label="Close menu"
+            >
+              close
+            </button>
+          </div>
+          <div className="flex-1 flex flex-col justify-center gap-6">
+            {NAV_LINKS.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                onClick={() => setMenuOpen(false)}
+                className="display-huge text-[13vw] leading-none hover:text-smoke transition-colors"
+              >
+                {link.label}
+              </a>
+            ))}
+            <a
+              href={PROFILE.resumePath}
+              download
+              onClick={() => setMenuOpen(false)}
+              className="display-huge text-[13vw] leading-none text-smoke"
+            >
+              resume
+            </a>
+          </div>
+        </div>
+      )}
+
+      {/* Hero */}
+      <section id="top" className="pt-32 md:pt-40 pb-16 px-6 md:px-10">
+        <div className="mx-auto max-w-7xl">
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+            className="display-huge text-[15vw] md:text-[11vw] text-ink-deep"
           >
-            {/* Profile Image */}
-            <motion.div variants={fadeInUp} className="flex-shrink-0">
-              <div className="relative w-48 h-48 md:w-64 md:h-64">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full animate-pulse opacity-20"></div>
+            Shreyas
+            <br />
+            Gupta
+          </motion.h1>
+
+          <div className="mt-10 md:mt-14 grid md:grid-cols-12 gap-10 items-start">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.25, duration: 0.9 }}
+              className="md:col-span-5"
+            >
+              <div className="border border-beige bg-white p-3">
                 <Image
                   src={PROFILE.photo}
                   alt={PROFILE.name}
-                  width={256}
-                  height={256}
-                  className="relative w-full h-full rounded-full object-cover border-4 border-white dark:border-gray-800 shadow-2xl"
+                  width={560}
+                  height={700}
+                  className="w-full h-auto object-cover grayscale"
                   priority
                 />
               </div>
+              <p className="mt-3 text-xs uppercase tracking-widest text-smoke">
+                {PROFILE.location}
+              </p>
             </motion.div>
 
-            {/* Hero Text */}
-            <div className="flex-1 text-center md:text-left" id="about">
-              <motion.div variants={fadeInUp} className="flex items-center gap-2 justify-center md:justify-start mb-4">
-                <MapPin size={18} className="text-gray-500 dark:text-gray-400" />
-                <span className="text-gray-600 dark:text-gray-400">{PROFILE.location}</span>
-              </motion.div>
-
-              <motion.h2
-                variants={fadeInUp}
-                className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent"
-              >
-                {PROFILE.name}
-              </motion.h2>
-
-              <motion.p
-                variants={fadeInUp}
-                className="text-2xl md:text-3xl font-semibold text-gray-700 dark:text-gray-300 mb-6"
-              >
-                {PROFILE.title}
-              </motion.p>
-
-              <motion.p
-                variants={fadeInUp}
-                className="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-2xl"
-              >
-                {PROFILE.tagline}
-              </motion.p>
-
-              <motion.div
-                variants={fadeInUp}
-                className="flex flex-wrap items-center gap-4 justify-center md:justify-start"
-              >
-                <a
-                  href={`mailto:${PROFILE.email}`}
-                  className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium"
-                >
-                  <Mail size={18} />
-                  Get in Touch
-                </a>
-                <a
-                  href={PROFILE.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-6 py-3 border-2 border-gray-300 dark:border-gray-700 hover:border-blue-600 dark:hover:border-blue-500 rounded-lg transition-colors font-medium text-gray-700 dark:text-gray-300"
-                >
-                  <Github size={18} />
-                  GitHub
-                </a>
-                <a
-                  href={PROFILE.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-6 py-3 border-2 border-gray-300 dark:border-gray-700 hover:border-blue-600 dark:hover:border-blue-500 rounded-lg transition-colors font-medium text-gray-700 dark:text-gray-300"
-                >
-                  <Linkedin size={18} />
-                  LinkedIn
-                </a>
-                <a
-                  href={PROFILE.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-6 py-3 border-2 border-gray-300 dark:border-gray-700 hover:border-blue-600 dark:hover:border-blue-500 rounded-lg transition-colors font-medium text-gray-700 dark:text-gray-300"
-                >
-                  <Globe size={18} />
-                  Website
-                </a>
-              </motion.div>
-            </div>
-          </motion.div>
-
-          {/* Scroll Indicator */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1, duration: 0.5 }}
-            className="flex justify-center mt-16"
-          >
-            <button
-              onClick={() => scrollToSection("projects")}
-              className="animate-bounce text-gray-400 hover:text-blue-600 transition-colors"
-            >
-              <ChevronDown size={32} />
-            </button>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Achievements Section */}
-      <section id="achievements" className="py-20 px-6 bg-white dark:bg-gray-900">
-        <div className="container mx-auto max-w-4xl">
-          <motion.div
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true }}
-            variants={staggerContainer}
-          >
-            <motion.h3
-              variants={fadeInUp}
-              className="text-4xl font-bold mb-4 text-center"
-            >
-              Awards & Achievements
-            </motion.h3>
-            <motion.p
-              variants={fadeInUp}
-              className="text-gray-600 dark:text-gray-400 text-center mb-12 max-w-2xl mx-auto"
-            >
-              Competitive milestones and recognition from hackathons and innovation events.
-            </motion.p>
-
-            <div className="space-y-6">
-              {ACHIEVEMENTS.map((item, index) => (
-                <motion.div
-                  key={index}
-                  variants={fadeInUp}
-                  className="p-6 rounded-xl border-2 border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50 hover:border-blue-500 dark:hover:border-blue-500 transition-all"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="p-3 rounded-lg bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400">
-                      <Trophy size={24} />
-                    </div>
-                    <div>
-                      <h4 className="text-xl font-bold">{item.title}</h4>
-                      <p className="text-blue-600 dark:text-blue-400 font-medium">{item.issuer}</p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{item.date} • {item.location}</p>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Projects Section */}
-      <section id="projects" className="py-20 px-6 bg-white dark:bg-gray-900">
-        <div className="container mx-auto max-w-6xl">
-          <motion.div
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true }}
-            variants={staggerContainer}
-          >
-            <motion.h3
-              variants={fadeInUp}
-              className="text-4xl font-bold mb-4 text-center"
-            >
-              Featured Projects
-            </motion.h3>
-            <motion.p
-              variants={fadeInUp}
-              className="text-gray-600 dark:text-gray-400 text-center mb-12 max-w-2xl mx-auto"
-            >
-              Here are some of my recent projects showcasing my skills in AI/ML, full-stack development, and data science.
-            </motion.p>
-
-            <div className="grid gap-8 md:grid-cols-2">
-              {PROJECTS.map((project, index) => (
-                <motion.div
-                  key={index}
-                  variants={fadeInUp}
-                  className={`group relative p-6 rounded-xl border-2 transition-all duration-300 ${
-                    project.highlight
-                      ? "border-blue-500 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20"
-                      : "border-gray-200 dark:border-gray-800 hover:border-blue-500 dark:hover:border-blue-500 bg-gray-50 dark:bg-gray-800/50"
-                  }`}
-                >
-                  {project.highlight && (
-                    <div className="absolute -top-3 left-6 px-3 py-1 bg-blue-600 text-white text-xs font-bold rounded-full">
-                      ⭐ HIGHLIGHT
-                    </div>
-                  )}
-
-                  <div className="flex items-start justify-between mb-4">
-                    <div>
-                      <h4 className="text-xl font-bold mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                        {project.title}
-                      </h4>
-                      <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1">
-                        <Calendar size={14} />
-                        {project.period}
-                      </p>
-                    </div>
-                    <div className="flex gap-2">
-                      {project.github && (
-                        <a
-                          href={project.github}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-blue-600 hover:text-white transition-colors"
-                        >
-                          <Github size={18} />
-                        </a>
-                      )}
-                      {project.demo && (
-                        <a
-                          href={project.demo}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-blue-600 hover:text-white transition-colors"
-                        >
-                          <ExternalLink size={18} />
-                        </a>
-                      )}
-                    </div>
-                  </div>
-
-                  <p className="text-gray-600 dark:text-gray-300 mb-4 leading-relaxed">
-                    {project.summary}
-                  </p>
-
-                  <div className="flex flex-wrap gap-2">
-                    {project.stack.map((tech, techIndex) => (
-                      <span
-                        key={techIndex}
-                        className="px-3 py-1 text-xs font-medium rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Skills Section */}
-      <section id="skills" className="py-20 px-6">
-        <div className="container mx-auto max-w-6xl">
-          <motion.div
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true }}
-            variants={staggerContainer}
-          >
-            <motion.h3
-              variants={fadeInUp}
-              className="text-4xl font-bold mb-4 text-center"
-            >
-              Technical Skills
-            </motion.h3>
-            <motion.p
-              variants={fadeInUp}
-              className="text-gray-600 dark:text-gray-400 text-center mb-12 max-w-2xl mx-auto"
-            >
-              A comprehensive toolkit for building modern AI/ML applications and data-driven solutions.
-            </motion.p>
-
-            <div className="grid gap-8 md:grid-cols-2">
-              {Object.entries(SKILLS).map(([category, skills], index) => {
-                const icons = {
-                  "Programming Languages": Code2,
-                  "AI/ML & Data Science": Cpu,
-                  "Frameworks & Libraries": Database,
-                  "Tools & Technologies": Wrench,
-                };
-                const Icon = icons[category as keyof typeof icons];
-
-                return (
-                  <motion.div
-                    key={category}
-                    variants={fadeInUp}
-                    className="p-6 rounded-xl border-2 border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:border-blue-500 dark:hover:border-blue-500 transition-all"
-                  >
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
-                        <Icon size={24} />
-                      </div>
-                      <h4 className="text-xl font-bold">{category}</h4>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {skills.map((skill, skillIndex) => (
-                        <span
-                          key={skillIndex}
-                          className="px-3 py-1.5 text-sm font-medium rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-blue-100 hover:text-blue-700 dark:hover:bg-blue-900/30 dark:hover:text-blue-300 transition-colors"
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Experience Section */}
-      <section id="experience" className="py-20 px-6 bg-white dark:bg-gray-900">
-        <div className="container mx-auto max-w-4xl">
-          <motion.div
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true }}
-            variants={staggerContainer}
-          >
-            <motion.h3
-              variants={fadeInUp}
-              className="text-4xl font-bold mb-4 text-center"
-            >
-              Experience
-            </motion.h3>
-            <motion.p
-              variants={fadeInUp}
-              className="text-gray-600 dark:text-gray-400 text-center mb-12 max-w-2xl mx-auto"
-            >
-              Professional internships and hands-on experience in data analysis, web development, and strategic planning.
-            </motion.p>
-
-            <div className="space-y-8">
-              {EXPERIENCE.map((exp, index) => (
-                <motion.div
-                  key={index}
-                  variants={fadeInUp}
-                  className="relative p-6 rounded-xl border-2 border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50 hover:border-blue-500 dark:hover:border-blue-500 transition-all"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="p-3 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
-                      <Briefcase size={24} />
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
-                        <h4 className="text-xl font-bold">{exp.role}</h4>
-                        <span className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1">
-                          <Calendar size={14} />
-                          {exp.period}
-                        </span>
-                      </div>
-                      <p className="text-blue-600 dark:text-blue-400 font-medium mb-1">
-                        {exp.company}
-                      </p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                        {exp.location}
-                      </p>
-                      <ul className="space-y-2">
-                        {exp.points.map((point, pointIndex) => (
-                          <li
-                            key={pointIndex}
-                            className="flex items-start gap-2 text-gray-600 dark:text-gray-300"
-                          >
-                            <span className="text-blue-600 dark:text-blue-400 mt-1">•</span>
-                            <span>{point}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Education */}
             <motion.div
-              variants={fadeInUp}
-              className="mt-12 p-6 rounded-xl border-2 border-purple-200 dark:border-purple-800 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/20 dark:to-pink-950/20"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.9 }}
+              className="md:col-span-7"
             >
-              <h4 className="text-2xl font-bold mb-4">Education</h4>
-              <div className="space-y-2">
-                <p className="text-xl font-semibold text-gray-800 dark:text-gray-200">
-                  {EDUCATION.institution}
-                </p>
-                <p className="text-lg text-purple-600 dark:text-purple-400 font-medium">
-                  {EDUCATION.degree}
-                </p>
-                <div className="flex flex-wrap gap-4 text-gray-600 dark:text-gray-400">
-                  <span className="flex items-center gap-1">
-                    <Calendar size={16} />
-                    {EDUCATION.period}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <MapPin size={16} />
-                    {EDUCATION.location}
-                  </span>
-                  {EDUCATION.gpa && (
-                    <span className="font-semibold text-gray-800 dark:text-gray-200">
-                      CGPA: {EDUCATION.gpa}
-                    </span>
-                  )}
-                </div>
+              <p className="font-serif italic text-2xl md:text-4xl leading-snug text-balance">
+                The official home for my work in AI, engineering, and research.
+              </p>
+              <p className="mt-6 text-sm uppercase tracking-widest text-smoke">
+                {PROFILE.title}
+              </p>
+              <p className="mt-6 text-base md:text-lg leading-relaxed max-w-xl text-ink">
+                {PROFILE.tagline}
+              </p>
+              <div className="mt-8 flex flex-wrap gap-x-8 gap-y-3 text-sm lowercase">
+                <a href={PROFILE.github} target="_blank" rel="noopener noreferrer" className="link-quiet">
+                  github
+                </a>
+                <a href={PROFILE.linkedin} target="_blank" rel="noopener noreferrer" className="link-quiet">
+                  linkedin
+                </a>
+                <a href={PROFILE.leetcode} target="_blank" rel="noopener noreferrer" className="link-quiet">
+                  leetcode
+                </a>
+                <a href={`mailto:${PROFILE.email}`} className="link-quiet">
+                  email
+                </a>
               </div>
             </motion.div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* Certifications Section */}
-      <section id="certifications" className="py-20 px-6">
-        <div className="container mx-auto max-w-6xl">
-          <motion.div
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true }}
-            variants={staggerContainer}
-          >
-            <motion.h3
-              variants={fadeInUp}
-              className="text-4xl font-bold mb-4 text-center"
-            >
-              Certifications
-            </motion.h3>
-            <motion.p
-              variants={fadeInUp}
-              className="text-gray-600 dark:text-gray-400 text-center mb-12 max-w-2xl mx-auto"
-            >
-              Professional certifications from industry leaders and prestigious institutions.
-            </motion.p>
+      {/* Latest — featured strip */}
+      <section className="px-6 md:px-10 pb-24">
+        <div className="mx-auto max-w-7xl border-t border-beige">
+          <motion.p {...reveal} className="pt-6 text-xs uppercase tracking-[0.35em] text-smoke">
+            Latest
+          </motion.p>
+          <div className="mt-6 grid md:grid-cols-3">
+            {featured.map((item, i) => (
+              <motion.a
+                key={i}
+                {...reveal}
+                transition={{ ...reveal.transition, delay: i * 0.12 }}
+                href={item.href}
+                className={`group py-8 md:py-10 md:px-8 border-b md:border-b-0 border-beige ${
+                  i > 0 ? "md:border-l" : "md:pl-0"
+                }`}
+              >
+                <p className="text-xs uppercase tracking-[0.3em] text-smoke">{item.label}</p>
+                <h3 className="mt-4 text-xl md:text-2xl font-medium leading-snug group-hover:text-smoke transition-colors">
+                  {item.title}
+                </h3>
+                <p className="mt-3 font-serif italic text-smoke">{item.meta}</p>
+              </motion.a>
+            ))}
+          </div>
+        </div>
+      </section>
 
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {CERTIFICATIONS.map((cert, index) => (
-                <motion.div
-                  key={index}
-                  variants={fadeInUp}
-                  className="p-6 rounded-xl border-2 border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:border-blue-500 dark:hover:border-blue-500 transition-all group"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="p-2 rounded-lg bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 group-hover:scale-110 transition-transform">
-                      <Award size={24} />
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="font-bold mb-1 text-gray-800 dark:text-gray-200">
-                        {cert.title}
-                      </h4>
-                      <p className="text-sm text-blue-600 dark:text-blue-400 font-medium mb-1">
-                        {cert.issuer}
-                      </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
-                        {cert.date}
-                      </p>
-                    </div>
+      {/* PROJECTS */}
+      <section id="projects" className="py-20 md:py-28 border-t border-beige">
+        <div className="px-6 md:px-10 mx-auto max-w-7xl">
+          <motion.div {...reveal} className="flex items-end justify-between gap-6 flex-wrap">
+            <h2 className="section-marker text-[9vw] md:text-[5.5vw]">Projects</h2>
+            <div className="flex items-center gap-6 text-sm lowercase pb-2">
+              <button onClick={() => scrollCarousel(-1)} className="link-quiet">
+                prev
+              </button>
+              <button onClick={() => scrollCarousel(1)} className="link-quiet">
+                next
+              </button>
+            </div>
+          </motion.div>
+          <motion.p {...reveal} className="mt-4 font-serif italic text-xl md:text-2xl text-smoke max-w-2xl">
+            Selected work in AI/ML, security, and full-stack systems.
+          </motion.p>
+        </div>
+
+        <motion.div {...reveal} className="mt-12">
+          <div
+            ref={carouselRef}
+            onPointerDown={onDragStart}
+            onPointerMove={onDragMove}
+            onPointerUp={onDragEnd}
+            onPointerCancel={onDragEnd}
+            onClickCapture={onCarouselClickCapture}
+            className="no-scrollbar carousel-drag flex gap-6 overflow-x-auto snap-x snap-mandatory px-6 md:px-10 scroll-pl-6 md:scroll-pl-10 pb-4 select-none cursor-grab"
+          >
+            {PROJECTS.map((project, i) => (
+              <article
+                key={i}
+                className="snap-start shrink-0 w-[80vw] sm:w-[46vw] md:w-[30vw] lg:w-[24vw]"
+              >
+                {/* Cover art: real screenshot / bespoke artwork, typographic fallback */}
+                {project.cover ? (
+                  <div className="aspect-square border border-beige overflow-hidden bg-white">
+                    <Image
+                      src={project.cover}
+                      alt={`${project.title} — cover`}
+                      width={800}
+                      height={800}
+                      draggable={false}
+                      className="w-full h-full object-cover object-top pointer-events-none"
+                    />
                   </div>
+                ) : (
+                  <div
+                    className={`aspect-square flex flex-col justify-between p-6 border border-beige ${
+                      COVER_STYLES[i % COVER_STYLES.length]
+                    }`}
+                  >
+                    <div className="flex items-start justify-between text-xs uppercase tracking-[0.3em] opacity-70">
+                      <span>{String(i + 1).padStart(2, "0")}</span>
+                      {project.highlight && <span>Featured</span>}
+                    </div>
+                    <p className="display-huge text-[5rem] md:text-[5.5rem] leading-none self-center">
+                      {initials(project.title)}
+                    </p>
+                    <p className="text-xs uppercase tracking-[0.3em] opacity-70">{project.period}</p>
+                  </div>
+                )}
+
+                <h3 className="mt-5 text-lg md:text-xl font-medium leading-snug">
+                  {project.title}
+                </h3>
+                <p className="mt-3 text-sm leading-relaxed text-smoke">{project.summary}</p>
+                <p className="mt-4 text-xs uppercase tracking-widest text-sand">
+                  {project.stack.join(", ")}
+                </p>
+                <div className="mt-4 flex gap-6 text-sm lowercase">
+                  {project.github && (
+                    <a href={project.github} target="_blank" rel="noopener noreferrer" className="link-quiet">
+                      github
+                    </a>
+                  )}
+                  {project.demo && (
+                    <a href={project.demo} target="_blank" rel="noopener noreferrer" className="link-quiet">
+                      live demo
+                    </a>
+                  )}
+                </div>
+              </article>
+            ))}
+          </div>
+        </motion.div>
+
+        <motion.div {...reveal} className="mt-10 px-6 md:px-10 mx-auto max-w-7xl">
+          <a
+            href={PROFILE.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="link-quiet text-sm lowercase"
+          >
+            view all on github
+          </a>
+        </motion.div>
+      </section>
+
+      {/* EXPERIENCE */}
+      <section id="experience" className="py-20 md:py-28 border-t border-beige">
+        <div className="px-6 md:px-10 mx-auto max-w-7xl">
+          <motion.h2 {...reveal} className="section-marker text-[9vw] md:text-[5.5vw]">
+            Experience
+          </motion.h2>
+
+          <div className="mt-14 max-w-3xl space-y-16">
+            {EXPERIENCE.map((exp, i) => (
+              <motion.article key={i} {...reveal}>
+                <p className="font-serif italic text-lg text-smoke">
+                  {exp.period} — {exp.location}
+                </p>
+                <h3 className="mt-3 text-2xl md:text-4xl font-medium leading-tight">
+                  {exp.role}
+                </h3>
+                <p className="mt-1 text-lg text-smoke">{exp.company}</p>
+                <ul className="mt-6 space-y-3 text-base md:text-lg leading-relaxed">
+                  {exp.points.map((point, j) => (
+                    <li key={j} className="pl-5 border-l border-beige">
+                      {point}
+                    </li>
+                  ))}
+                </ul>
+              </motion.article>
+            ))}
+
+            {/* Education */}
+            <motion.article {...reveal} className="pt-4 border-t border-beige">
+              <p className="pt-10 font-serif italic text-lg text-smoke">
+                {EDUCATION.period} — {EDUCATION.location}
+              </p>
+              <h3 className="mt-3 text-2xl md:text-4xl font-medium leading-tight">
+                {EDUCATION.degree}
+              </h3>
+              <p className="mt-1 text-lg text-smoke">{EDUCATION.institution}</p>
+              {EDUCATION.gpa && (
+                <p className="mt-4 text-base">CGPA: {EDUCATION.gpa}</p>
+              )}
+            </motion.article>
+          </div>
+        </div>
+      </section>
+
+      {/* ABOUT */}
+      <section id="about" className="py-20 md:py-28 border-t border-beige">
+        <div className="px-6 md:px-10 mx-auto max-w-7xl">
+          <motion.h2 {...reveal} className="section-marker text-[9vw] md:text-[5.5vw]">
+            About
+          </motion.h2>
+          <motion.p {...reveal} className="mt-4 font-serif italic text-xl md:text-2xl text-smoke max-w-2xl">
+            Tools I work with, recognition, and credentials.
+          </motion.p>
+
+          <div className="mt-14 grid md:grid-cols-2 gap-x-16 gap-y-14">
+            {/* Skills */}
+            <div className="space-y-10">
+              {Object.entries(SKILLS).map(([category, skills]) => (
+                <motion.div key={category} {...reveal}>
+                  <p className="text-xs uppercase tracking-[0.3em] text-smoke">{category}</p>
+                  <p className="mt-3 text-base md:text-lg leading-relaxed">
+                    {skills.join(", ")}
+                  </p>
                 </motion.div>
               ))}
             </div>
-          </motion.div>
+
+            {/* Awards + Certifications */}
+            <div className="space-y-14">
+              <motion.div {...reveal}>
+                <p className="text-xs uppercase tracking-[0.3em] text-smoke">Awards</p>
+                {ACHIEVEMENTS.map((item, i) => (
+                  <div key={i} className="mt-5 pb-5 border-b border-beige">
+                    <p className="font-serif italic text-smoke">
+                      {item.date} — {item.location}
+                    </p>
+                    <h3 className="mt-2 text-xl font-medium">{item.title}</h3>
+                    <p className="mt-1 text-smoke">{item.issuer}</p>
+                  </div>
+                ))}
+              </motion.div>
+
+              <motion.div {...reveal}>
+                <p className="text-xs uppercase tracking-[0.3em] text-smoke">Certifications</p>
+                <ul className="mt-5">
+                  {CERTIFICATIONS.map((cert, i) => (
+                    <li key={i} className="py-4 border-b border-beige flex items-baseline justify-between gap-6">
+                      <div>
+                        <p className="font-medium leading-snug">{cert.title}</p>
+                        <p className="text-sm text-smoke">{cert.issuer}</p>
+                      </div>
+                      <span className="font-serif italic text-smoke whitespace-nowrap">{cert.date}</span>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section id="contact" className="py-20 px-6 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20">
-        <div className="container mx-auto max-w-4xl">
-          <motion.div
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true }}
-            variants={staggerContainer}
-            className="text-center"
+      {/* CONTACT — inverted */}
+      <section id="contact" className="bg-ink text-cream py-24 md:py-32">
+        <div className="px-6 md:px-10 mx-auto max-w-7xl text-center">
+          <motion.p {...reveal} className="font-serif italic text-2xl md:text-3xl text-stone">
+            Have a project, a role, or just an idea worth chasing? Write to me.
+          </motion.p>
+          <motion.a
+            {...reveal}
+            href={`mailto:${PROFILE.email}`}
+            className="display-huge block mt-10 text-[4.5vw] md:text-[3vw] break-all hover:text-beige transition-colors"
           >
-            <motion.h3
-              variants={fadeInUp}
-              className="text-4xl font-bold mb-4"
-            >
-              Let&apos;s Connect
-            </motion.h3>
-            <motion.p
-              variants={fadeInUp}
-              className="text-gray-600 dark:text-gray-400 mb-12 max-w-2xl mx-auto"
-            >
-              I&apos;m always open to discussing new projects, creative ideas, or opportunities to be part of your vision.
-            </motion.p>
-
-            <motion.div
-              variants={fadeInUp}
-              className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-8"
-            >
-              <a
-                href={`mailto:${PROFILE.email}`}
-                className="flex items-center gap-3 px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-all transform hover:scale-105 font-medium text-lg shadow-lg"
-              >
-                <Mail size={24} />
-                Send Email
-              </a>
-              <a
-                href={PROFILE.resumePath}
-                download
-                className="flex items-center gap-3 px-8 py-4 border-2 border-blue-600 text-blue-600 dark:text-blue-400 hover:bg-blue-600 hover:text-white rounded-xl transition-all transform hover:scale-105 font-medium text-lg"
-              >
-                <Download size={24} />
-                Download Resume
-              </a>
-            </motion.div>
-
-            <motion.div
-              variants={fadeInUp}
-              className="flex flex-wrap items-center justify-center gap-6"
-            >
-              <a
-                href={PROFILE.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-              >
-                <Github size={24} />
-                <span className="font-medium">GitHub</span>
-              </a>
-              <a
-                href={PROFILE.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-              >
-                <Linkedin size={24} />
-                <span className="font-medium">LinkedIn</span>
-              </a>
-              <a
-                href={PROFILE.leetcode}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-              >
-                <Code2 size={24} />
-                <span className="font-medium">LeetCode</span>
-              </a>
-              <a
-                href={PROFILE.website}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-              >
-                <Globe size={24} />
-                <span className="font-medium">Website</span>
-              </a>
-              <a
-                href={`tel:${PROFILE.phone}`}
-                className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-              >
-                <Mail size={24} />
-                <span className="font-medium">{PROFILE.phone}</span>
-              </a>
-            </motion.div>
+            {PROFILE.email}
+          </motion.a>
+          <motion.div
+            {...reveal}
+            className="mt-14 flex flex-wrap items-center justify-center gap-x-10 gap-y-4 text-sm lowercase text-stone"
+          >
+            <a href={PROFILE.github} target="_blank" rel="noopener noreferrer" className="link-quiet">
+              github
+            </a>
+            <a href={PROFILE.linkedin} target="_blank" rel="noopener noreferrer" className="link-quiet">
+              linkedin
+            </a>
+            <a href={PROFILE.leetcode} target="_blank" rel="noopener noreferrer" className="link-quiet">
+              leetcode
+            </a>
+            <a href={PROFILE.resumePath} download className="link-quiet">
+              download resume
+            </a>
+            <a href={`tel:${PROFILE.phone}`} className="link-quiet">
+              {PROFILE.phone}
+            </a>
           </motion.div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-8 px-6 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
-        <div className="container mx-auto max-w-6xl text-center text-gray-600 dark:text-gray-400">
-          <p>© {new Date().getFullYear()} {PROFILE.name}. Built with Next.js & Tailwind CSS.</p>
-          <p className="text-sm mt-2">
-            Designed to showcase AI/ML projects and full-stack development skills.
+      <footer className="bg-ink-deep text-stone border-t border-ink py-8">
+        <div className="px-6 md:px-10 mx-auto max-w-7xl flex flex-col md:flex-row items-center justify-between gap-3 text-xs">
+          <p>
+            © {new Date().getFullYear()} {PROFILE.name} — {PROFILE.location}
+          </p>
+          <p className="lowercase">
+            <a href="#projects" className="hover:underline underline-offset-4">projects</a>
+            <span className="mx-3">/</span>
+            <a href="#experience" className="hover:underline underline-offset-4">experience</a>
+            <span className="mx-3">/</span>
+            <a href="#about" className="hover:underline underline-offset-4">about</a>
+            <span className="mx-3">/</span>
+            <a href="#contact" className="hover:underline underline-offset-4">contact</a>
           </p>
         </div>
       </footer>

@@ -1,8 +1,24 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Anton, Inter, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const anton = Anton({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-display",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
+
+const instrumentSerif = Instrument_Serif({
+  weight: "400",
+  style: ["normal", "italic"],
+  subsets: ["latin"],
+  variable: "--font-serif",
+});
 
 export const metadata: Metadata = {
   title: "Shreyas Gupta – Portfolio",
@@ -22,8 +38,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
-      <body className={inter.className}>{children}</body>
+    <html
+      lang="en"
+      className={`scroll-smooth ${anton.variable} ${inter.variable} ${instrumentSerif.variable}`}
+    >
+      <body className="font-sans bg-cream text-ink antialiased">{children}</body>
     </html>
   );
 }

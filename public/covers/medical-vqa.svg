@@ -1,0 +1,6 @@
+<svg width="800" height="800" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="800" fill="#FFFFFF"/>
+  <path d="M340 200 h120 v140 h140 v120 h-140 v140 h-120 v-140 h-140 v-120 h140 z" fill="#1C1C1C"/>
+  <text x="530" y="620" font-family="Georgia, 'Times New Roman', serif" font-style="italic" font-size="280" fill="#BFB69F" text-anchor="middle">?</text>
+  <text x="140" y="100" font-family="Arial, sans-serif" font-size="22" letter-spacing="8" fill="#5F5F5F">07</text>
+</svg>

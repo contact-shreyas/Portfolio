@@ -3,37 +3,30 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --cream: #f0eeeb;
+  --ink: #1c1c1c;
+  --smoke: #5f5f5f;
+  --beige: #cac2b6;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-}
-
-/* Smooth scrolling for anchor links */
 html {
   scroll-behavior: smooth;
 }
 
-/* Custom scrollbar */
+body {
+  background: var(--cream);
+  color: var(--ink);
+}
+
+::selection {
+  background: var(--ink);
+  color: var(--cream);
+}
+
+/* Custom scrollbar — quiet, warm */
 ::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -41,20 +34,58 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
+  background: var(--beige);
+  border-radius: 0;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: var(--smoke);
 }
 
-@media (prefers-color-scheme: dark) {
-  ::-webkit-scrollbar-thumb {
-    background: #444;
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
   }
-  
-  ::-webkit-scrollbar-thumb:hover {
-    background: #666;
+
+  /* Giant condensed display headings, Radical Face style */
+  .display-huge {
+    font-family: var(--font-display), sans-serif;
+    text-transform: uppercase;
+    line-height: 0.92;
+    letter-spacing: -0.01em;
+  }
+
+  /* Letter-spaced section markers: P R O J E C T S */
+  .section-marker {
+    font-family: var(--font-display), sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.35em;
+    line-height: 1;
+  }
+
+  /* Hide horizontal scrollbars inside carousels */
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* While mouse-dragging the carousel, suspend snapping so it follows the cursor */
+  .carousel-drag[data-dragging="true"] {
+    scroll-snap-type: none;
+    cursor: grabbing;
+  }
+
+  /* Editorial underline links */
+  .link-quiet {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1px;
+    transition: color 0.2s ease;
+  }
+  .link-quiet:hover {
+    color: var(--smoke);
   }
 }
