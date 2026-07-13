@@ -42,7 +42,7 @@ const PROJECTS = [
     github: "https://github.com/contact-shreyas/Information-Technology-in-Education",
     demo: "",
     highlight: true,
-    cover: "/covers/policy-enforcement.svg",
+    cover: "/covers/policy-enforcement.png",
   },
   {
     title: "Infrastructure Configuration Hardening Engine",
@@ -53,7 +53,7 @@ const PROJECTS = [
     github: "https://github.com/contact-shreyas/HardenerAI",
     demo: "",
     highlight: true,
-    cover: "/covers/hardening-engine.svg",
+    cover: "/covers/hardening-engine.png",
   },
   {
     title: "GenAI Governance Platform",
@@ -64,7 +64,7 @@ const PROJECTS = [
     github: "https://github.com/contact-shreyas/GenAI-GOVERNANCE-SYSTEM",
     demo: "",
     highlight: false,
-    cover: "/covers/genai-governance.svg",
+    cover: "/covers/genai-governance.png",
   },
   {
     title: "Light Pollution Explorer 2.0 (Agentic Light Sentinel)",
@@ -75,7 +75,7 @@ const PROJECTS = [
     github: "https://github.com/contact-shreyas/agentic-light-sentinel",
     demo: "",
     highlight: true,
-    cover: "/covers/light-pollution.svg",
+    cover: "/covers/light-pollution.png",
   },
   {
     title: "AI-Powered Fraud Detection System",
@@ -130,7 +130,7 @@ const PROJECTS = [
     github: "https://github.com/contact-shreyas/nextjs-secure-app",
     demo: "",
     highlight: false,
-    cover: "/covers/secure-fullstack.svg",
+    cover: "/covers/secure-fullstack.png",
   },
 ];
 
