@@ -21,13 +21,15 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "Shreyas Gupta – Portfolio",
-  description: "AI/ML • Data • Full-Stack | Portfolio of Shreyas Gupta, Computer Science student at SRMIST specializing in AI/ML and data-driven systems.",
-  keywords: ["Shreyas Gupta", "AI", "Machine Learning", "Data Science", "Full Stack Developer", "Portfolio"],
+  metadataBase: new URL("https://shreyas-gupta-portfolio-mu.vercel.app"),
+  title: "Shreyas Gupta — AI Engineer",
+  description:
+    "The official home for the work of Shreyas Gupta in AI, engineering, and research — RAG pipelines, agentic systems, security tooling, and full-stack products.",
+  keywords: ["Shreyas Gupta", "AI Engineer", "Machine Learning", "RAG", "Agentic AI", "Full Stack Developer", "Portfolio"],
   authors: [{ name: "Shreyas Gupta" }],
   openGraph: {
-    title: "Shreyas Gupta – Portfolio",
-    description: "AI/ML • Data • Full-Stack Developer",
+    title: "Shreyas Gupta — AI Engineer",
+    description: "AI, engineering, and research — selected projects and experience.",
     type: "website",
   },
 };

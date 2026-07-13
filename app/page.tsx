@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 
@@ -306,8 +306,33 @@ const NAV_LINKS = [
 
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [chennaiTime, setChennaiTime] = useState("");
   const carouselRef = useRef<HTMLDivElement>(null);
   const dragState = useRef({ down: false, moved: false, startX: 0, startLeft: 0 });
+
+  // Quiet live clock for the contact section — my local time in Chennai
+  useEffect(() => {
+    const fmt = () =>
+      new Intl.DateTimeFormat("en-IN", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+        timeZone: "Asia/Kolkata",
+      }).format(new Date());
+    setChennaiTime(fmt());
+    const timer = setInterval(() => setChennaiTime(fmt()), 60_000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Track carousel position for the editorial "01 / 10" counter
+  const onCarouselScroll = () => {
+    const el = carouselRef.current;
+    if (!el) return;
+    const max = el.scrollWidth - el.clientWidth;
+    const idx = max > 0 ? Math.round((el.scrollLeft / max) * (PROJECTS.length - 1)) : 0;
+    setActiveSlide(idx);
+  };
 
   const scrollCarousel = (dir: 1 | -1) => {
     const el = carouselRef.current;
@@ -532,11 +557,14 @@ export default function Home() {
       </section>
 
       {/* PROJECTS */}
-      <section id="projects" className="py-20 md:py-28 border-t border-beige">
+      <section id="projects" className="py-20 md:py-28 border-t border-beige scroll-mt-16">
         <div className="px-6 md:px-10 mx-auto max-w-7xl">
           <motion.div {...reveal} className="flex items-end justify-between gap-6 flex-wrap">
             <h2 className="section-marker text-[9vw] md:text-[5.5vw]">Projects</h2>
             <div className="flex items-center gap-6 text-sm lowercase pb-2">
+              <span className="font-serif italic text-smoke tabular-nums">
+                {String(activeSlide + 1).padStart(2, "0")} / {String(PROJECTS.length).padStart(2, "0")}
+              </span>
               <button onClick={() => scrollCarousel(-1)} className="link-quiet">
                 prev
               </button>
@@ -558,12 +586,13 @@ export default function Home() {
             onPointerUp={onDragEnd}
             onPointerCancel={onDragEnd}
             onClickCapture={onCarouselClickCapture}
+            onScroll={onCarouselScroll}
             className="no-scrollbar carousel-drag flex gap-6 overflow-x-auto snap-x snap-mandatory px-6 md:px-10 scroll-pl-6 md:scroll-pl-10 pb-4 select-none cursor-grab"
           >
             {PROJECTS.map((project, i) => (
               <article
                 key={i}
-                className="snap-start shrink-0 w-[80vw] sm:w-[46vw] md:w-[30vw] lg:w-[24vw]"
+                className="group snap-start shrink-0 w-[80vw] sm:w-[46vw] md:w-[30vw] lg:w-[24vw]"
               >
                 {/* Cover art: real screenshot / bespoke artwork, typographic fallback */}
                 {project.cover ? (
@@ -574,7 +603,7 @@ export default function Home() {
                       width={800}
                       height={800}
                       draggable={false}
-                      className="w-full h-full object-cover object-top pointer-events-none"
+                      className="w-full h-full object-cover object-top pointer-events-none transition-opacity duration-500 group-hover:opacity-80"
                     />
                   </div>
                 ) : (
@@ -631,7 +660,7 @@ export default function Home() {
       </section>
 
       {/* EXPERIENCE */}
-      <section id="experience" className="py-20 md:py-28 border-t border-beige">
+      <section id="experience" className="py-20 md:py-28 border-t border-beige scroll-mt-16">
         <div className="px-6 md:px-10 mx-auto max-w-7xl">
           <motion.h2 {...reveal} className="section-marker text-[9vw] md:text-[5.5vw]">
             Experience
@@ -675,13 +704,18 @@ export default function Home() {
       </section>
 
       {/* ABOUT */}
-      <section id="about" className="py-20 md:py-28 border-t border-beige">
+      <section id="about" className="py-20 md:py-28 border-t border-beige scroll-mt-16">
         <div className="px-6 md:px-10 mx-auto max-w-7xl">
           <motion.h2 {...reveal} className="section-marker text-[9vw] md:text-[5.5vw]">
             About
           </motion.h2>
-          <motion.p {...reveal} className="mt-4 font-serif italic text-xl md:text-2xl text-smoke max-w-2xl">
-            Tools I work with, recognition, and credentials.
+          <motion.p {...reveal} className="mt-8 font-serif italic text-2xl md:text-3xl leading-snug max-w-3xl text-balance">
+            I&apos;m Shreyas — an engineer working where AI systems meet the real world:
+            sustainability platforms, security tooling, and research. I like building
+            things end to end, from the model to the interface, and shipping them.
+          </motion.p>
+          <motion.p {...reveal} className="mt-6 text-xs uppercase tracking-[0.3em] text-smoke">
+            Tools, recognition, and credentials
           </motion.p>
 
           <div className="mt-14 grid md:grid-cols-2 gap-x-16 gap-y-14">
@@ -732,7 +766,7 @@ export default function Home() {
       </section>
 
       {/* CONTACT — inverted */}
-      <section id="contact" className="bg-ink text-cream py-24 md:py-32">
+      <section id="contact" className="bg-ink text-cream py-24 md:py-32 scroll-mt-16">
         <div className="px-6 md:px-10 mx-auto max-w-7xl text-center">
           <motion.p {...reveal} className="font-serif italic text-2xl md:text-3xl text-stone">
             Have a project, a role, or just an idea worth chasing? Write to me.
@@ -764,6 +798,10 @@ export default function Home() {
               {PROFILE.phone}
             </a>
           </motion.div>
+          <motion.p {...reveal} className="mt-10 text-xs uppercase tracking-[0.35em] text-smoke">
+            {PROFILE.location}
+            {chennaiTime && ` — ${chennaiTime} IST`}
+          </motion.p>
         </div>
       </section>
 
@@ -782,6 +820,9 @@ export default function Home() {
             <span className="mx-3">/</span>
             <a href="#contact" className="hover:underline underline-offset-4">contact</a>
           </p>
+          <a href="#top" className="lowercase hover:underline underline-offset-4">
+            back to top ↑
+          </a>
         </div>
       </footer>
     </main>
